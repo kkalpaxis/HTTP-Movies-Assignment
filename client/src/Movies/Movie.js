@@ -1,12 +1,26 @@
 import React from "react";
 import axios from "axios";
 import MovieCard from "./MovieCard";
+import { Link } from 'react-router-dom'
+
 export default class Movie extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       movie: null
     };
+  }
+
+  deleteMovie = event => {
+    event.preventDefault();
+    axios
+    .delete(`http://localhost:5000/update-movie/${this.props.match.params.id}`)
+    .then(response =>{
+      console.log(response)
+    })
+    .catch(error => {
+      console.log(error.response)
+    })
   }
 
   componentDidMount() {
@@ -39,9 +53,17 @@ export default class Movie extends React.Component {
     return (
       <div className="save-wrapper">
         <MovieCard movie={this.state.movie} />
-        <div className="save-button" onClick={this.saveMovie}>
-          Save
-        </div>
+          <button className="save-button" onClick={this.saveMovie}>
+            Save
+          </button>
+          <Link to={`/updated-movie/${this.state.movie.id}`}>
+	        <button className="update-button">
+	          Update
+	        </button>
+	        </Link>
+          <button onClick={this.deleteMovie} className="delete-button">
+	          Delete
+	        </button>
       </div>
     );
   }
